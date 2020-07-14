@@ -1,0 +1,15 @@
+[package]
+name = "cargo-single"
+version = "1.0.0"
+authors = ["Ivan Nejgebauer <inejge@gmail.com>"]
+categories = ["development-tools", "development-tools::cargo-plugins"]
+description = "Extends Cargo to simplify working with single-file programs with dependencies."
+documentation = "https://github.com/inejge/cargo-single/README.md#usage"
+homepage = "https://github.com/inejge/cargo-single"
+keywords = ["cargo", "cargo-subcommand", "single-file", "dependencies"]
+license = "Apache-2.0/MIT"
+readme = "README.md"
+repository = "https://github.com/inejge/cargo-single"
+edition = "2018"
+
+[dependencies]
