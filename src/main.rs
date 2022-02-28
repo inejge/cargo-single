@@ -224,30 +224,43 @@ fn copy_deps(
     let cto = BufReader::new(cto);
     let ctmp = File::create(&cargo_tmp)?;
     let mut ctmp = BufWriter::new(ctmp);
-    for cto_line in cto.lines() {
-        let cto_line = cto_line?;
-        ctmp.write_all(cto_line.as_bytes())?;
-        ctmp.write_all(b"\n")?;
-        if cto_line != "[dependencies]" {
+    let mut deps = String::new();
+    let mut self_version = None;
+    for src_line in src.lines() {
+        let src_line = src_line?;
+        if !src_line.starts_with("// ") {
+            break;
+        }
+        if src_line.starts_with("// self = ") {
+            self_version = Some(
+                src_line
+                    .splitn(2, "// self = ")
+                    .nth(1)
+                    .expect("version")
+                    .to_owned(),
+            );
             continue;
         }
-        for src_line in src.lines() {
-            let src_line = src_line?;
-            if !src_line.starts_with("// ") {
-                break;
-            }
-            ctmp.write_all(
-                src_line
-                    .splitn(2, "// ")
-                    .nth(1)
-                    .expect("rest of line")
-                    .as_bytes(),
-            )?;
-            ctmp.write_all(b"\n")?;
-        }
-        ctmp.flush()?;
-        break;
+        deps.push_str(src_line.splitn(2, "// ").nth(1).expect("rest of line"));
+        deps.push('\n');
     }
+    for cto_line in cto.lines() {
+        let mut cto_line = cto_line?;
+        if cto_line.starts_with("version = ") {
+            if self_version.is_none() {
+                continue;
+            }
+            cto_line = format!("version = {}", self_version.as_ref().unwrap());
+        }
+        dbg!(&cto_line);
+        ctmp.write_all(cto_line.as_bytes())?;
+        ctmp.write_all(b"\n")?;
+        if cto_line == "[dependencies]" {
+            ctmp.write_all(deps.as_bytes())?;
+            break;
+        }
+    }
+    ctmp.flush()?;
     drop(ctmp);
     fs::rename(&cargo_tmp, &cargo_path)?;
     Ok(())

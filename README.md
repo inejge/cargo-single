@@ -36,9 +36,14 @@ fn main() {
 ```
 
 List the dependencies as comments at the top of the file. Each dependency line
-must start with the string `"// "` from the leftmost column, and continue in the
+must start with the string `// ` from the leftmost column, and continue in the
 format used in the `[dependencies]` section of `Cargo.toml`. End the list of
 dependencies with a blank line.
+
+You can set the version of your program by including a pseudo-dependency named
+__self__ in the list. The format of that dependency line is rigid: from the start
+of the line, `// self = `, followed by the version string in double quotes,
+followed by a newline without any intervening characters.
 
 To build and execute the program, run:
 
