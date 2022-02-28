@@ -1,6 +1,6 @@
 [package]
 name = "cargo-single"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Ivan Nejgebauer <inejge@gmail.com>"]
 categories = ["development-tools", "development-tools::cargo-plugins"]
 description = "Extends Cargo to simplify working with single-file programs with dependencies."
