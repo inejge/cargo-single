@@ -54,9 +54,9 @@ The tool is invoked through Cargo, with the syntax:
 cargo single <command> [<option> ...] {<source-file>|<source-dir>} [<arguments>]
 ```
 
-_Command_ is one of: __build__, __check__, __refresh__, or __run__. __Refresh__ will
-re-read the source file and update the dependencies in `Cargo.toml`, while the remaining
-three are regular Cargo sub-commands which will be passed to Cargo.
+_Command_ is one of: __build__, __check__, __fmt__, __refresh__, or __run__. __Refresh__
+will re-read the source file and update the dependencies in `Cargo.toml`, while
+the remaining four are regular Cargo sub-commands which will be passed to Cargo.
 
 _Options_ are a subset of options accepted by Cargo subcommands. The ones recognized by
 `cargo-single` are:

@@ -9,15 +9,18 @@ use std::process::{self, Command};
 const USAGE: &str = r#"Usage:
     cargo-single <command> [<option> ...] {<source-file>|<source-dir>} [<arguments>]
 
-<command> is one of: build, check, refresh, run
-    "build", "check" and "run" are regular Cargo subcommands.
+<command> is one of: build, check, fmt, refresh, run
+    "build", "check", "fmt" and "run" are regular Cargo subcommands.
     "refresh" will re-read the source file and update the dependencies in Cargo.toml.
 
 <option> is one or more of:
     +<toolchain>                Name of a toolchain installed with Rustup.
     --release                   Build/check in release mode.
     --target <target>           Use the specified target for building.
-    --no-quiet                  Don't pass --quiet to Cargo."#;
+    --no-quiet                  Don't pass --quiet to Cargo.
+
+"fmt" will accept and forward all options to the real Cargo, even those which make
+no sense for the subcommand."#;
 
 fn fatal_exit(message: &str) -> ! {
     eprintln!("{}", message);
@@ -40,7 +43,7 @@ fn main() {
     };
     let mut refresh_deps = false;
     match cmd.as_str() {
-        "build" | "check" | "run" => (),
+        "build" | "check" | "fmt" | "run" => (),
         "refresh" => refresh_deps = true,
         _ => fatal_exit(USAGE),
     }
@@ -178,8 +181,10 @@ fn main() {
             ));
         }
     }
-    if cmd == "refresh" {
-        return;
+    match cmd.as_str() {
+        "refresh" => return,
+        "fmt" => cargo_args.clear(),
+        _ => (),
     }
     if is_quiet {
         cargo_args.push("--quiet".to_owned());
