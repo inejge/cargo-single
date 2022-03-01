@@ -247,10 +247,9 @@ fn copy_deps(
     for cto_line in cto.lines() {
         let mut cto_line = cto_line?;
         if cto_line.starts_with("version = ") {
-            if self_version.is_none() {
-                continue;
+            if self_version.is_some() {
+                cto_line = format!("version = {}", self_version.as_ref().unwrap());
             }
-            cto_line = format!("version = {}", self_version.as_ref().unwrap());
         }
         ctmp.write_all(cto_line.as_bytes())?;
         ctmp.write_all(b"\n")?;
