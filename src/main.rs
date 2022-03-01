@@ -252,7 +252,6 @@ fn copy_deps(
             }
             cto_line = format!("version = {}", self_version.as_ref().unwrap());
         }
-        dbg!(&cto_line);
         ctmp.write_all(cto_line.as_bytes())?;
         ctmp.write_all(b"\n")?;
         if cto_line == "[dependencies]" {
